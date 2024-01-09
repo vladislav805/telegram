@@ -1,0 +1,33 @@
+{
+  "name": "@veluga/telegram",
+  "version": "0.1.0-alpha.0",
+  "description": "Library for Telegram Bot API",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "index.js",
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "run-p build:dist build:dts",
+    "build:dist": "node tools/build.js",
+    "build:dts": "tsc --emitDeclarationOnly && tsc-alias --project tsconfig.json",
+    "prepublish": "npm run build"
+  },
+  "keywords": [],
+  "author": "Vladislav Veluga <vlad@velu.ga> (https://velu.ga/)",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "1.6.5",
+    "form-data": "4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.10.8",
+    "esbuild": "0.19.11",
+    "npm-run-all": "4.1.5",
+    "ts-node": "10.9.2",
+    "tsc-alias": "1.8.8",
+    "typescript": "5.3.3"
+  }
+}
