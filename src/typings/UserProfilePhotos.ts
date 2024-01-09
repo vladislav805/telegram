@@ -1,6 +1,16 @@
-import type { PhotoSize } from './Photo';
+import type { PhotoSize } from './PhotoSize';
 
-export type UserProfilePhotos = {
+/**
+ * This object represent a user's profile pictures.
+ */
+export interface UserProfilePhotos {
+    /**
+     * Total number of profile pictures the target user has
+     */
     total_count: number;
+
+    /**
+     * Requested profile pictures (in up to 4 sizes each)
+     */
     photos: PhotoSize[][];
-};
+}

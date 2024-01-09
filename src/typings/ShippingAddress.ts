@@ -1,20 +1,34 @@
-/** This object represents a shipping address */
+/**
+ * This object represents a shipping address.
+ */
 export interface ShippingAddress {
-    /** ISO 3166-1 alpha-2 country code */
+    /**
+     * ISO 3166-1 alpha-2 country code
+     */
     country_code: string;
 
-    /** State, if applicable */
+    /**
+     * State, if applicable
+     */
     state: string;
 
-    /** City */
+    /**
+     * City
+     */
     city: string;
 
-    /** First line for the address */
+    /**
+     * First line for the address
+     */
     street_line1: string;
 
-    /** Second line for the address */
+    /**
+     * Second line for the address
+     */
     street_line2: string;
 
-    /** Address post code */
+    /**
+     * Address post code
+     */
     post_code: string;
 }

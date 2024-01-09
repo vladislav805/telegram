@@ -1,5 +1,5 @@
 import type { InputMessageContent } from './InputMessageContent';
-import type { InlineKeyboardMarkup } from './markup/InlineKeyboardMarkup';
+import type { InlineKeyboardMarkup } from './InlineKeyboardMarkup';
 
 /**
  * Represents a link to an article or web page.

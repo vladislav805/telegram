@@ -1,13 +1,10 @@
 import type { MessageEntity } from '@typings/MessageEntity';
 import type { Update } from '@typings/Update';
 import type { InputFile } from '@typings/InputFile';
-import type {
-    ForceReply,
-    InlineKeyboardMarkup,
-    Markup,
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove
-} from '@typings/markup';
+import type { InlineKeyboardMarkup } from '@typings/InlineKeyboardMarkup';
+import type { ReplyKeyboardMarkup } from '@typings/ReplyKeyboardMarkup';
+import type { ReplyKeyboardRemove } from '@typings/ReplyKeyboardRemove';
+import type { ForceReply } from '@typings/ForceReply';
 import type { Message } from '@typings/Message';
 import type { WebhookInfo } from '@typings/WebhookInfo';
 import type { User } from '@typings/User';
@@ -15,7 +12,8 @@ import type { BotCommand } from '@typings/BotCommand';
 import type { MaskPosition } from '@typings/MaskPosition';
 import type { File } from '@typings/File';
 import type { UserProfilePhotos } from '@typings/UserProfilePhotos';
-import type { Chat, ChatPermissions } from '@typings/Chat';
+import type { Chat } from '@typings/Chat';
+import type { ChatPermissions } from '@typings/ChatPermissions';
 import type { ChatInviteLink } from '@typings/ChatInviteLink';
 import type { ChatMember } from '@typings/ChatMember';
 import type { BotCommandScope } from '@typings/BotCommandScope';
@@ -272,7 +270,7 @@ export class BotClient {
          * Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
          * instructions to remove reply keyboard or to force a reply from the user.
          */
-        reply_markup?: Markup;
+        reply_markup?: ReplyKeyboardMarkup | InlineKeyboardMarkup | ReplyKeyboardRemove | ForceReply;
     }): Promise<Message> {
         return this.request('sendMessage', params);
     }

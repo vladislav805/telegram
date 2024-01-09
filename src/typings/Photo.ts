@@ -1,8 +1,3 @@
-import type { FileCommon } from './FileCommon';
+import type { PhotoSize } from './PhotoSize';
 
 export type Photo = PhotoSize[];
-
-export interface PhotoSize extends FileCommon {
-    width: number;
-    height: number;
-}

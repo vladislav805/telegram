@@ -50,7 +50,7 @@ const generateInterface = (item) => {
     return `${imports ? `${imports}\n\n` : ''}/**\n * ${item.description.join('\n *\n * ')}\n */\nexport interface ${item.name} {
     ${item.items.map(({ name, type, description }) => {
         const isOptional = description.startsWith('Optional. ');
-        return `/**\n\t * ${description.replace(/^Optional\. /i, '')}\n\t */\n\t${name}${isOptional ? '?' : ''}: ${type};`;
+        return `/**\n\t * ${description.substring(isOptional ? 10 : 0)}\n\t */\n\t${name}${isOptional ? '?' : ''}: ${type};`;
     }).join('\n\n\t')}
 }
 `.replace(/\t/img, '    ');
@@ -61,7 +61,7 @@ const methods = [];
 for (const item of items) {
     if (item.type === 'object') {
         const code = generateInterface(item);
-        fs.writeFileSync(`res/${item.name}.ts`, code, { encoding: 'utf-8' });
+        fs.writeFileSync(`src/typings/${item.name}.ts`, code, { encoding: 'utf-8' });
     }
 }
 // const generateMethods = () => {

@@ -4,7 +4,7 @@ import type { MessageEntity } from './MessageEntity';
 import type { Animation } from './Animation';
 import type { Audio } from './Audio';
 import type { Document } from './Document';
-import type { PhotoSize } from './Photo';
+import type { PhotoSize } from './PhotoSize';
 import type { Sticker } from './Sticker';
 import type { Video } from './Video';
 import type { VideoNote } from './VideoNote';
@@ -25,7 +25,7 @@ import type { VideoChatStarted } from './VideoChatStarted';
 import type { VideoChatEnded } from './VideoChatEnded';
 import type { VideoChatParticipantsInvited } from './VideoChatParticipantsInvited';
 import type { WebAppData } from './WebAppData';
-import type { InlineKeyboardMarkup } from './markup/InlineKeyboardMarkup';
+import type { InlineKeyboardMarkup } from './InlineKeyboardMarkup';
 
 /**
  * This object represents a message.

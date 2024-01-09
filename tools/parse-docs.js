@@ -1,10 +1,10 @@
-(root => {
+((/** @type {HTMLElement[]} */ children) => {
     const items = [];
     let current = null;
 
     const parseType = type => {
-        if (type.includes(' or ') || type.includes(', ')) return type.split(/( or |, | and )/).map(parseType).join(' | ');
-        if (type.startsWith('Array of ')) return parseType(`${type.replace('Array of ', '')}[]`);
+        if (type.includes(' or ')) return type.split(' or ').map(parseType).join(' | ');
+        if (type.startsWith('Array of ')) return parseType(`${parseType(type.substring(9))}[]`);
 
         switch (type) {
             case 'String': return 'string';
@@ -18,36 +18,40 @@
         return type;
     };
 
-    const parseRow = (current, row) => {
+    const parseRow = (current, /** @type {HTMLTableRowElement} */ row) => {
         if (current.type === 'object') {
             return {
-                name: row.cells[0].textContent,
-                type: parseType(row.cells[1].textContent),
-                description: row.cells[2].textContent,
+                name: row.cells[0].innerText,
+                type: parseType(row.cells[1].innerText),
+                description: row.cells[2].innerText,
             };
         } else {
             return {
-                name: row.cells[0].textContent,
-                type: parseType(row.cells[1].textContent),
-                required: row.cells[2].textContent === 'Yes',
-                description: row.cells[3].textContent,
+                name: row.cells[0].innerText,
+                type: parseType(row.cells[1].innerText),
+                required: row.cells[2].innerText === 'Yes',
+                description: row.cells[3].innerText,
             };
         }
     };
 
-    for (const node of root) {
+    for (const node of children) {
         const tag = node.tagName.toLowerCase();
-        const content = node.textContent;
+        const content = node.innerText;
 
         switch (tag) {
             case 'h4': {
                 // Остальные заголовки
-                if (content.includes(' ')) break;
+                let textHeader = content.includes(' ');
 
                 const type = /^[A-Z]/.test(content) ? 'object' : 'method';
 
-                if (current) {
+                if (current || textHeader) {
                     items.push(current);
+                }
+
+                if (textHeader) {
+                    break;
                 }
 
                 current = {
@@ -83,3 +87,4 @@
 
     copy(JSON.stringify(items))
 })([...document.getElementById('dev_page_content').children]);
+// См. `sendMediaGroup`: `"type": "InputMediaAudio, InputMediaDocument, InputMediaPhoto and InputMediaVideo[]",`

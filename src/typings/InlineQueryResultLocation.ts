@@ -1,4 +1,4 @@
-import type { InlineKeyboardMarkup } from './markup/InlineKeyboardMarkup';
+import type { InlineKeyboardMarkup } from './InlineKeyboardMarkup';
 import type { InputMessageContent } from './InputMessageContent';
 
 /**
