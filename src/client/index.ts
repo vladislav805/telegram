@@ -74,7 +74,7 @@ export class BotClient {
          * affect updates created before the call to the getUpdates, so unwanted updates may be received for a short
          * period of time.
          */
-        allowed_updates?: String[];
+        allowed_updates?: Array<Exclude<keyof Update, 'update_id'>>;
     }): Promise<Update[]> {
         return this.request('getUpdates', params);
     }

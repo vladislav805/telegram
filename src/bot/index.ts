@@ -17,6 +17,7 @@ interface BotConfig {
     secret: string;
     apiUrl?: string;
     maxFailuresInRow?: number;
+    allowedUpdates?: Array<Exclude<keyof Update, 'update_id'>>;
 }
 
 export class Bot implements IBot {
@@ -24,6 +25,7 @@ export class Bot implements IBot {
         secret: 'never_used',
         apiUrl: 'https://api.telegram.org',
         maxFailuresInRow: 3,
+        allowedUpdates: [],
     };
 
     public readonly config: Required<BotConfig>;
@@ -212,7 +214,11 @@ export class Bot implements IBot {
     }
 
     private async poll(): Promise<void> {
-        const response = await this.client.getUpdates({ offset: this.pollingOffset, timeout: this.LONGPOLL_TIMEOUT });
+        const response = await this.client.getUpdates({
+            offset: this.pollingOffset,
+            timeout: this.LONGPOLL_TIMEOUT,
+            allowed_updates: this.config.allowedUpdates.length > 0 ? this.config.allowedUpdates : undefined,
+        });
 
         if (response.length) {
             this.pollingOffset = response[response.length - 1].update_id + 1;
