@@ -3,20 +3,18 @@ import type { Stream } from 'stream';
 
 import type { Bot } from '@bot';
 
-type DownloadFileFunction<T> = (this: Bot, file_id: string) => Promise<T>;
+type DownloadFileFunction<T> = (bot: Bot, file_id: string) => Promise<T>;
 
 async function downloadFile(
-    this: Bot | null,
     responseType: 'blob' | 'stream' | 'arraybuffer',
+    bot: Bot,
     file_id: string,
 ): Promise<Blob | Stream | ArrayBuffer> {
-    if (this === null) throw new Error('Use `downloadFile` as `downloadFile.call(bot, fileId)`');
-
-    const file = await this.client.getFile({ file_id });
+    const file = await bot.client.getFile({ file_id });
 
     const { data } = await axios({
         method: 'GET',
-        url: `https://api.telegram.org/file/bot${this.config.secret}/${file.file_path}`,
+        url: `https://api.telegram.org/file/bot${bot.config.secret}/${file.file_path}`,
         responseType,
     });
 
