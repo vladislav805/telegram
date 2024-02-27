@@ -8,6 +8,6 @@ esbuild.build({
     bundle: true,
     platform: 'node',
     sourcemap: true,
-    minify: true,
-    target: ["node10.4"],
+    minify: false,
+    target: ['node18'],
 }).catch(() => process.exit(1));
