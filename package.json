@@ -19,13 +19,9 @@
   "keywords": [],
   "author": "Vladislav Veluga <vlad@velu.ga> (https://velu.ga/)",
   "license": "ISC",
-  "dependencies": {
-    "axios": "1.6.5",
-    "form-data": "4.0.0"
-  },
   "devDependencies": {
-    "@types/node": "20.10.8",
-    "esbuild": "0.19.11",
+    "@types/node": "20.11.20",
+    "esbuild": "0.20.1",
     "npm-run-all": "4.1.5",
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.8",

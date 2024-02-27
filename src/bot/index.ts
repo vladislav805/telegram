@@ -1,6 +1,4 @@
-import axios from 'axios';
-import FormData from 'form-data';
-import * as fs from 'fs';
+import { existsSync, createReadStream, ReadStream } from 'fs';
 import * as path from 'path';
 
 import type { Update } from '@typings/Update';
@@ -67,21 +65,21 @@ export class Bot implements IBot {
                 typeof value === 'string' &&
                 ['photo', 'video', 'audio', 'document'].includes(key) &&
                 !value.startsWith('http') &&
-                fs.existsSync(value)
+                existsSync(value)
             ) {
-                value = fs.createReadStream(value);
+                value = createReadStream(value);
             }
 
-            if (value instanceof Buffer || value instanceof fs.ReadStream) {
+            if (value instanceof Buffer || value instanceof ReadStream) {
                 let filename = 'filename'; // fallback
 
                 if ('__filename' in params) {
                     filename = params.__filename as string; // user-specified name
-                } else if (value instanceof fs.ReadStream && typeof value.path === 'string') {
+                } else if (value instanceof ReadStream && typeof value.path === 'string') {
                     filename = path.basename(value.path); // file stream path
                 }
 
-                form.append(key, value, { filename });
+                form.append(key, value, filename);
                 return form;
             }
 
@@ -126,14 +124,21 @@ export class Bot implements IBot {
         const timeout = apiMethod === 'getUpdates' ? (this.LONGPOLL_TIMEOUT + 4) * 1000 : 5000;
 
         try {
-            const { data, status, statusText } = await axios.request<Result>({
+            const controller = new AbortController()
+
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            const request = await fetch(url, {
                 method: 'POST',
-                url,
-                data: form,
-                headers: form.getHeaders(),
-                timeout,
-                responseType: 'json',
+                body: form,
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
+
+            const { status, statusText } = request;
+
+            const data = await request.json() as Result;
 
             if (data?.ok) {
                 return data.result;
@@ -141,12 +146,12 @@ export class Bot implements IBot {
 
             throw new Error(`Error HTTP ${status} ${statusText}: ${(data as ResultError)?.description}`);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('axios error:', error);
+            console.error('error occurred:', new Date(), error);
 
-                if ((params.__attempt__ = ++attempt) <= this.config.maxFailuresInRow) {
-                    return this.request(apiMethod, params);
-                }
+            if ((params.__attempt__ = ++attempt) <= this.config.maxFailuresInRow) {
+                // Ждём три секунды после падения
+                await delay(3000);
+                return this.request(apiMethod, params);
             }
 
             throw error;
