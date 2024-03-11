@@ -103,7 +103,7 @@ export class Bot implements IBot {
     }
 
     protected async request<T>(apiMethod: string, params: Record<string, unknown> = {}): Promise<T> {
-        let attempt = Number(params.__attempt__) || 0;
+        let leftAttempts = ((params.__leftAttempts as number) ??= this.config.maxFailuresInRow);
 
         type ResultOk = {
             ok: true;
@@ -123,6 +123,8 @@ export class Bot implements IBot {
 
         const timeout = apiMethod === 'getUpdates' ? (this.LONGPOLL_TIMEOUT + 4) * 1000 : 5000;
 
+        let status: number | undefined = undefined;
+
         try {
             const controller = new AbortController()
 
@@ -136,7 +138,8 @@ export class Bot implements IBot {
 
             clearTimeout(timeoutId);
 
-            const { status, statusText } = request;
+            const { statusText } = request;
+            status = request.status;
 
             const data = await request.json() as Result;
 
@@ -148,7 +151,10 @@ export class Bot implements IBot {
         } catch (error) {
             console.error('error occurred:', new Date(), error);
 
-            if ((params.__attempt__ = ++attempt) <= this.config.maxFailuresInRow) {
+            --leftAttempts;
+
+            // 400 - например, Bad Request: message to edit not found
+            if (status !== 400 && leftAttempts > 0) {
                 // Ждём три секунды после падения
                 await delay(3000);
                 return this.request(apiMethod, params);
