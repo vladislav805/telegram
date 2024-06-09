@@ -134,4 +134,5 @@ export * from './VideoNote';
 export * from './Voice';
 export * from './WebAppData';
 export * from './WebAppInfo';
+export * from './WebAppUser';
 export * from './WebhookInfo';
