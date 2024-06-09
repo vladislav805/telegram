@@ -1,5 +1,5 @@
 import { existsSync, createReadStream, ReadStream } from 'fs';
-import * as path from 'path';
+import { basename } from 'path';
 
 import type { Update } from '@typings/Update';
 import type { Message } from '@typings/Message';
@@ -9,6 +9,7 @@ import { sendMessageUniversal } from '@utils/sendMessageUniversal';
 import type { SendMessageUniversalFunction } from '@utils/sendMessageUniversal';
 import { delay } from '@utils/delay';
 
+import { createWebAppApi } from '../webapp';
 import type { EventListener, EventType, IBot } from './typings';
 
 interface BotConfig {
@@ -76,7 +77,7 @@ export class Bot implements IBot {
                 if ('__filename' in params) {
                     filename = params.__filename as string; // user-specified name
                 } else if (value instanceof ReadStream && typeof value.path === 'string') {
-                    filename = path.basename(value.path); // file stream path
+                    filename = basename(value.path); // file stream path
                 }
 
                 form.append(key, value, filename);
@@ -264,4 +265,6 @@ export class Bot implements IBot {
             this.fire(key, update[key] as unknown as Message); // по факту, здесь будет правильный тип/объект
         }
     }
+
+    public webApp = createWebAppApi(this);
 }
