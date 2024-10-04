@@ -104,7 +104,7 @@ export class Bot implements IBot {
     }
 
     protected async request<T>(apiMethod: string, params: Record<string, unknown> = {}): Promise<T> {
-        let leftAttempts = ((params.__leftAttempts as number) ??= this.config.maxFailuresInRow);
+        let leftAttempts = (params.__leftAttempts as number ?? this.config.maxFailuresInRow);
 
         type ResultOk = {
             ok: true;
@@ -154,11 +154,18 @@ export class Bot implements IBot {
 
             --leftAttempts;
 
-            // 400 - например, Bad Request: message to edit not found
-            if (status !== 400 && leftAttempts > 0) {
+            const validErrors: Array<number | undefined> = [
+                400, // Bad Request: message to edit not found
+                403, // Forbidden: Forbidden: bot was blocked by the user
+            ];
+
+            if (!validErrors.includes(status) && leftAttempts > 0) {
                 // Ждём три секунды после падения
                 await delay(3000);
-                return this.request(apiMethod, params);
+                return this.request(apiMethod, {
+                    ...params,
+                    __leftAttempts: leftAttempts,
+                });
             }
 
             throw error;
